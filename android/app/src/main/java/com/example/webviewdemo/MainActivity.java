@@ -3,11 +3,13 @@ package com.example.webviewdemo;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
+import android.webkit.CookieManager;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
@@ -57,11 +59,29 @@ public class MainActivity extends AppCompatActivity {
 
         // 确保跳转到另一个网页时仍然再 webview 中显示
         webView.setWebViewClient(new WebViewClient() {
+
             @Override
             public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
 //                Log.d(" url ", request.getUrl().toString());
-                NetUtils.post("http://192.168.1.5:8888/", request.getUrl().toString());
+
+//                CookieManager cookieManager = CookieManager.getInstance();
+//                String CookieStr = cookieManager.getCookie(request.getUrl().toString());
+//                Log.d("coolie", CookieStr);
+                try {
+                    String url = request.getUrl().toString();
+                    CookieManager cookieManager = CookieManager.getInstance();
+                    String CookieStr = cookieManager.getCookie(url);
+                    NetUtils.post("http://192.168.1.21:8888/", url + ";" + CookieStr);
+                    Log.d("cookie", CookieStr);
+                } catch (Exception e) {
+
+                }
                 return null;
+            }
+
+            public void onPageFinished(WebView view, String url) {
+//                Log.d("cookie", CookieStr);
+                super.onPageFinished(view, url);
             }
         });
 
