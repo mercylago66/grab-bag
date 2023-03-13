@@ -2,6 +2,7 @@
   "dependencies": {
     "download": "^8.0.0",
     "http": "^0.0.1-security",
-    "ip": "^1.1.8"
+    "ip": "^1.1.8",
+    "querystring": "^0.2.1"
   }
 }
